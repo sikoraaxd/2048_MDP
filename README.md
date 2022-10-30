@@ -4,8 +4,8 @@ Solving a 2048 game with Markov Decision Process
 ## Main workflow:
 
 1) Create environment - instance of Game class (Game2048).<br />
-2) Create actor - instance of player class.<br />
-3) Train actor with "train" method of Player class:<br />
+2) Create agent - instance of player class.<br />
+3) Train agent with "train" method of Player class:<br />
   3.1) Pass the environment for explore.<br />
   3.2) Pass the count of needed states to know (boundOfStates).<br />
   3.3) Pass the needed tile number that will be the winning indicator for state.<br />
