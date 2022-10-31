@@ -2,7 +2,7 @@ import sys
 import numpy as np
 import config
 from game import Game2048
-from player import Player
+from agent import Agent
 from app import App
 
 if __name__ == '__main__':
@@ -10,12 +10,12 @@ if __name__ == '__main__':
     np.random.seed(config.SEED)
 
     environment = Game2048(2)
-    player = Player()
+    agent = Agent()
 
-    player.train(environment=environment,
+    agent.train(environment=environment,
                  bound_of_states=400,
                  needed=config.NEEDED)
-    player.create_policy(environment)
+    agent.create_policy(environment)
 
     environment.init(start_state=True)
     app = App(environment)
@@ -26,9 +26,9 @@ if __name__ == '__main__':
         actStr = 'x'
         if environment.max_tile_value != config.NEEDED and not environment.game_over:
             state = environment.get_state()
-            action = player.forward(state)
+            action = agent.forward(state)
             environment.forward(action)
-            value = round(player.get_state_value(state), 2)
+            value = round(agent.get_state_value(state), 2)
             actStr = config.ACTION_ARROWS[action]
 
         app.draw(value=value, action=actStr)

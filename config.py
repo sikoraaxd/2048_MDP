@@ -1,4 +1,4 @@
-#Player
+#Agent
 PROB_OF_2 = 0.9
 PROB_OF_4 = 0.1
 WIN_REWARD = 10

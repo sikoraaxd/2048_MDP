@@ -5,7 +5,7 @@ import sys
 import config
 
 
-class Player:
+class Agent:
     def __init__(self):
         self.states = {}
 
