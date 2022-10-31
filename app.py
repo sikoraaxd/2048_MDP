@@ -1,6 +1,7 @@
 import pygame as pg
 import config
 
+
 class Tile(pg.sprite.Sprite):
     def __init__(self, width, height, center_x, center_y, number):
         pg.sprite.Sprite.__init__(self)
@@ -30,6 +31,7 @@ class Tile(pg.sprite.Sprite):
                     self.bg.centery-text_surface.get_height()/2
                 )
             )
+
 
 class App2048(pg.sprite.Sprite):
     def __init__(self, tiles_count=4):
@@ -74,6 +76,7 @@ class App2048(pg.sprite.Sprite):
         for row in range(self.tiles_count):
             for col in range(self.tiles_count):
                 self.tiles[row][col].number = game_state[row][col]
+
 
 class App:
     def __init__(self, environment):

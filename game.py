@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Game2048:
 
     # Конструктор игры 2048
@@ -9,7 +10,7 @@ class Game2048:
     # cols: int - количество столбцов на игровом поле.
     # Необязательный параметр, если не задан, то
     # cols = rows
-    def __init__(self, rows, cols = None):
+    def __init__(self, rows, cols=None):
         self.rows = rows
         self.max_tile_value = 2
         self.cols = rows if cols is None else cols
@@ -151,12 +152,12 @@ class Game2048:
         for i in range(self.rows-1):
             for j in range(self.cols):
                 if self.game[i][j] == self.game[i+1][j]:
-                   return False
+                    return False
 
         for i in range(self.rows):
             for j in range(self.cols-1):
                 if self.game[i][j] == self.game[i][j+1]:
-                   return False
+                    return False
 
         return True
 
@@ -166,8 +167,7 @@ class Game2048:
     # Returns -> int:
     # Максимальное значение ячейки на игровом поле
     def __get_max_tile(self):
-      max = np.max([num for row in self.game for num in row])
-      return max
+        return np.max([num for row in self.game for num in row])
 
     # Вычисление хеша игры
     #
@@ -189,7 +189,7 @@ class Game2048:
     # в состояние S0
     #
     # Returns -> void
-    def init(self, start_state = False):
+    def init(self, start_state=False):
         self.game = []
 
         self.__fill_tiles(start_state)
@@ -215,8 +215,7 @@ class Game2048:
     # Returns -> int:
     # Числовое значение игры, равное сумме всех чисел в ячейках
     def get_value(self):
-      val = np.sum([num for row in self.game for num in row])
-      return val
+        return np.sum([num for row in self.game for num in row])
 
     # Получение количества свободных ячеек на игровом поле
     #
@@ -236,19 +235,20 @@ class Game2048:
     #
     # Returns -> void
     def forward(self, action):
-      if action == 0:
-          self.__switch_left()
-      elif action == 1:
-          self.__switch_up()
-      elif action == 2:
-          self.__switch_right()
-      else:
-          self.__switch_down()
+        if action == 0:
+            self.__switch_left()
+        elif action == 1:
+            self.__switch_up()
+        elif action == 2:
+            self.__switch_right()
+        else:
+            self.__switch_down()
 
-      self.max_tile_value = self.__get_max_tile()
+        self.max_tile_value = self.__get_max_tile()
 
-      if self.__is_game_over():
-          self.game_over = True
+        if self.__is_game_over():
+            self.game_over = True
 
-      if self.__is_enaugh_place():
-          self.__add_elem()
+        if self.__is_enaugh_place():
+            self.__add_elem()
+            
