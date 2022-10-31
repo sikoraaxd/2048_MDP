@@ -17,7 +17,7 @@ Solving a 2048 game with Markov Decision Process
 while True:
   if environment.max_tile_value != needed and not environment.game_over:
       state = environment.get_state()
-      action = player.forward(state)
+      action = agent.forward(state)
       environment.forward(action)
   else:
       break
