@@ -27,24 +27,24 @@ class Agent:
     # Returns -> void
     def __add_new_state(self, state):
         self.states[state] = {
-        'solved_V': False,
-        'R': 0,
-        'V': 0,       
-        'actions': {
-            0: {
-                'Prs': []
-            },
-            1: {
-                'Prs': []
-            },
-            2: {
-                'Prs': []
-            },
-            3: {
-                'Prs': []
+            'solved_V': False,
+            'R': 0,
+            'V': 0,
+            'actions': {
+                0: {
+                    'Prs': []
+                },
+                1: {
+                    'Prs': []
+                },
+                2: {
+                    'Prs': []
+                },
+                3: {
+                    'Prs': []
+                }
             }
         }
-    }
 
     # Выбор следующего действия в среде
     #
@@ -85,13 +85,13 @@ class Agent:
     # Вероятность перехода в текущее состояние
     def __get_state_pr(self, environment, value_plus):
         free_tiles = environment.getFreeTiles() + 1
-        probabitily = 1/free_tiles
+        probabitily = 1 / free_tiles
 
         if value_plus == 2:
             probabitily *= config.PROB_OF_2
         elif value_plus == 4:
             probabitily *= config.PROB_OF_4
-        
+
         return probabitily
 
     # Фиксирование вероятности перехода из состояния state
@@ -111,7 +111,7 @@ class Agent:
         state_pr = self.__get_state_pr(environment, value_plus)
 
         if [state_pr, next_state] not in state_action_prs:
-                state_action_prs.append([state_pr, next_state])
+            state_action_prs.append([state_pr, next_state])
 
     # Вывод прогресса изучения среды
     #
@@ -121,7 +121,7 @@ class Agent:
     #
     # Returns -> void
     def __progress_bar(self, states_count, bound_of_states):
-        persents = (states_count/bound_of_states) * 100
+        persents = (states_count / bound_of_states) * 100
         persents = int(persents)
         if persents % 10 == 0:
             print("Прогресс: " + str(persents) + '%')
@@ -144,8 +144,8 @@ class Agent:
             if states_count == 0:
                 environment.init()
             else:
-                environment.init(startState = True)
-            
+                environment.init(startState=True)
+
             while True:
                 state = environment.get_state()
                 value = environment.get_value()
@@ -154,10 +154,10 @@ class Agent:
                     self.__add_new_state(state)
                     states_count += 1
                     self.__progress_bar(states_count, bound_of_states)
-                
+
                 if self.__check_terminate_state(environment, state, needed):
                     break
-                
+
                 action = self.__next_action()
                 environment.forward(action)
                 next_state = environment.get_state()
@@ -167,10 +167,10 @@ class Agent:
                     continue
 
                 self.__add_state_action_pr(state,
-                                        action, 
-                                        next_state,
-                                        value_plus,
-                                        environment)
+                                           action,
+                                           next_state,
+                                           value_plus,
+                                           environment)
 
     # Рекурсивное вычисление ценности состояния
     #
@@ -197,7 +197,7 @@ class Agent:
                         next_state = elem[1]
                         vs_plus = self.__find_state_value(next_state)
                         sum += pr * vs_plus
-            self.states[state]['V'] = self.states[state]['R'] + config.Y*sum
+            self.states[state]['V'] = self.states[state]['R'] + config.Y * sum
             self.states[state]['solved_V'] = True
             return self.states[state]['V']
 
@@ -258,7 +258,7 @@ class Agent:
 
         with open(config.POLICIES_PATH + filename, 'w') as f:
             json.dump(self.states, f)
-    
+
     # Загрузка стратегии игрока из файла filename
     #
     # Params:

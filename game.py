@@ -12,8 +12,8 @@ class Game2048:
     # cols = rows
     def __init__(self, rows, cols=None):
         self.rows = rows
-        self.max_tile_value = 2
         self.cols = rows if cols is None else cols
+        self.max_tile_value = 2
         self.game = []
         self.start_state = None
         self.game_over = False
@@ -135,7 +135,7 @@ class Game2048:
     #
     # Returns -> bool:
     # True - если есть свободные ячейки
-    def __is_enaugh_place(self):
+    def __is_enough_place(self):
         for i in range(self.rows):
             if 0 in self.game[i]:
                 return True
@@ -146,7 +146,7 @@ class Game2048:
     # Returns -> bool:
     # True - если игра окончена
     def __is_game_over(self):
-        if self.__is_enaugh_place():
+        if self.__is_enough_place():
             return False
 
         for i in range(self.rows-1):
@@ -249,6 +249,6 @@ class Game2048:
         if self.__is_game_over():
             self.game_over = True
 
-        if self.__is_enaugh_place():
+        if self.__is_enough_place():
             self.__add_elem()
             
