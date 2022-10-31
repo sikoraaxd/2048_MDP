@@ -1,6 +1,7 @@
 import json
 from time import sleep
 import numpy as np
+import sys
 import config
 
 class Player:
@@ -14,7 +15,7 @@ class Player:
     #
     # Returns -> bool:
     # True - если состояние уже было посещено
-    def __isVisitedState(self, state):
+    def __is_visited_state(self, state):
         return state in self.states.keys()
 
     # Добавление состояния в список посещённых
@@ -23,12 +24,12 @@ class Player:
     # state: int - состояние среды
     #
     # Returns -> void
-    def __addNewState(self, state):
+    def __add_new_state(self, state):
         self.states[state] = {
-        'SolvedV': False,
+        'solved_V': False,
         'R': 0,
         'V': 0,       
-        'Actions': {
+        'actions': {
             0: {
                 'Prs': []
             },
@@ -48,7 +49,7 @@ class Player:
     #
     # Returns -> int:
     # Следующее действие - целое число из диапазона [0, 3]
-    def __nextAction(self):
+    def __next_action(self):
         return np.random.randint(0, 4)
 
     # Проверка, является ли состояние терминальным
@@ -61,113 +62,113 @@ class Player:
     #
     # Returns -> bool:
     # True - если состояние терминальное
-    def __checkTerminateState(self, environment, state, needed):
-        isTerminateState = False
+    def __check_terminate_state(self, environment, state, needed):
+        is_terminate_state = False
 
-        if environment.maxTileValue == needed:
+        if environment.max_tile_value == needed:
             self.states[state]['R'] = config.WIN_REWARD
-            isTerminateState = True
+            is_terminate_state = True
 
         if environment.game_over:
-            isTerminateState = True
+            is_terminate_state = True
 
-        return isTerminateState
+        return is_terminate_state
 
     # Вычисление вероятности перехода в текущее состояние
     #
     # Params:
     # environment - среда
-    # valuePlus: int - числовое значение среды после действия
+    # value_plus: int - числовое значение среды после действия
     #
     # Returns -> float:
     # Вероятность перехода в текущее состояние
-    def __getStatePr(self, environment, valuePlus):
-        freeTiles = environment.getFreeTiles() + 1
-        probabitily = 1/(freeTiles)
+    def __get_state_pr(self, environment, value_plus):
+        free_tiles = environment.getFreeTiles() + 1
+        probabitily = 1/free_tiles
 
-        if valuePlus == 2:
+        if value_plus == 2:
             probabitily *= config.PROB_OF_2
-        elif valuePlus == 4:
+        elif value_plus == 4:
             probabitily *= config.PROB_OF_4
         
         return probabitily
 
     # Фиксирование вероятности перехода из состояния state
-    # в состояние nextState после совершения действия action
+    # в состояние next_state после совершения действия action
     #
     # Params:
     # state: int - состояние среды
     # action: int - действие
-    # nextState: int - состояние среды после действия action
-    # valuePlus: int - числовое значение среды после действия
+    # next_state: int - состояние среды после действия action
+    # value_plus: int - числовое значение среды после действия
     # needed: int - победное значение ячейки
     # environment - среда
     #
     # Returns -> void
-    def __addStateActionPr(self, state, action, nextState, valuePlus, environment):
-        stateActionPrs = self.states[state]['Actions'][action]['Prs']
-        statePr = self.__getStatePr(environment, valuePlus)
+    def __add_state_action_pr(self, state, action, next_state, value_plus, environment):
+        state_action_prs = self.states[state]['actions'][action]['Prs']
+        state_pr = self.__get_state_pr(environment, value_plus)
 
-        if [statePr, nextState] not in stateActionPrs:
-                stateActionPrs.append([statePr, nextState])
+        if [state_pr, next_state] not in state_action_prs:
+                state_action_prs.append([state_pr, next_state])
 
     # Вывод прогресса изучения среды
     #
     # Params:
-    # statesCount: int - количество найденных состояний
-    # boundOfStates: int - нужное количество состояний
+    # states_count: int - количество найденных состояний
+    # bound_of_states: int - нужное количество состояний
     #
     # Returns -> void
-    def __progressBar(self, statesCount, boundOfStates):
-        persents = (statesCount/boundOfStates) * 100
+    def __progress_bar(self, states_count, bound_of_states):
+        persents = (states_count/bound_of_states) * 100
         persents = int(persents)
         if persents % 10 == 0:
             print("Прогресс: " + str(persents) + '%')
 
     # Изучение среды environment до момента, пока не будет
-    # изучено boundOfStates состояний, а также начисление
+    # изучено bound_of_states состояний, а также начисление
     # награды за переход в состояние с максимальным значением
     # ячейки, равным needed.
     #
     # Params:
     # environment - среда
-    # boundOfStates: int - нужное количество состояний
+    # bound_of_states: int - нужное количество состояний
     # needed: int - победное значение ячейки
     #
     # Returns -> void
-    def train(self, environment, boundOfStates, needed):
-        statesCount = len(self.states.keys())
+    def train(self, environment, bound_of_states, needed):
+        states_count = len(self.states.keys())
 
-        while statesCount < boundOfStates:
-            if statesCount == 0:
+        while states_count < bound_of_states:
+            if states_count == 0:
                 environment.init()
             else:
                 environment.init(startState = True)
             
             while True:
-                state = environment.getState()
-                value = environment.getValue()
+                state = environment.get_state()
+                value = environment.get_value()
 
-                if not self.__isVisitedState(state):
-                    self.__addNewState(state)
-                    statesCount += 1
-                    self.__progressBar(statesCount, boundOfStates)
+                if not self.__is_visited_state(state):
+                    self.__add_new_state(state)
+                    states_count += 1
+                    self.__progress_bar(states_count, bound_of_states)
                 
-                if self.__checkTerminateState(environment, state, needed) == True:
+                if self.__check_terminate_state(environment, state, needed):
                     break
                 
-                action = self.__nextAction()
+                action = self.__next_action()
                 environment.forward(action)
-                nextState = environment.getState()
-                valuePlus = environment.getValue() - value
+                next_state = environment.get_state()
+                value_plus = environment.get_value() - value
 
-                if nextState == state:
+                if next_state == state:
                     continue
 
-                self.__addStateActionPr(state, 
+                self.__add_state_action_pr(state,
                                         action, 
-                                        nextState, 
-                                        valuePlus, 
+                                        next_state,
+                                        value_plus,
                                         environment)
 
     # Рекурсивное вычисление ценности состояния
@@ -177,26 +178,26 @@ class Player:
     #
     # Returns -> float:
     # Ценность состояния state
-    def __findStateValue(self, state):
-        if self.states[state]['SolvedV']:
+    def __find_state_value(self, state):
+        if self.states[state]['solved_V']:
             return self.states[state]['V']
 
         if self.states[state]['R'] == config.WIN_REWARD:
             self.states[state]['V'] = config.WIN_REWARD
-            self.states[state]['SolvedV'] = True
+            self.states[state]['solved_V'] = True
             return self.states[state]['V']
         else:
             sum = 0
             for action in range(4):
-                prs = self.states[state]['Actions'][action]['Prs']
-                if prs != []:
+                prs = self.states[state]['actions'][action]['Prs']
+                if prs:
                     for elem in prs:
                         pr = elem[0]
-                        nextState = elem[1]
-                        Vsplus = self.__findStateValue(nextState)
-                        sum += pr * Vsplus
+                        next_state = elem[1]
+                        vs_plus = self.__find_state_value(next_state)
+                        sum += pr * vs_plus
             self.states[state]['V'] = self.states[state]['R'] + config.Y*sum
-            self.states[state]['SolvedV'] = True
+            self.states[state]['solved_V'] = True
             return self.states[state]['V']
 
     # Создание стратегии
@@ -205,8 +206,8 @@ class Player:
     # environment - среда
     #
     # Returns -> void
-    def createPolicy(self, environment):
-        self.__findStateValue(environment.startState)
+    def create_policy(self, environment):
+        self.__find_state_value(environment.start_state)
 
     # Получение ценности состояния
     #
@@ -215,7 +216,7 @@ class Player:
     #
     # Returns -> float:
     # Ценность состояния
-    def getStateValue(self, state):
+    def get_state_value(self, state):
         return self.states[state]['V']
 
     # Вычисление следующего действия из состояния state
@@ -227,19 +228,19 @@ class Player:
     # Returns -> int:
     # Следующее действие 
     def forward(self, state):
-        actionValues = []
+        action_values = []
 
         for action in range(4):
             value = 0
-            prs = self.states[state]['Actions'][action]['Prs']
+            prs = self.states[state]['actions'][action]['Prs']
             for elem in prs:
                 pr = elem[0]
-                nextState = elem[1]
-                Vsplus = self.states[nextState]['V']
-                value += pr * Vsplus
-            actionValues.append(value)
+                next_state = elem[1]
+                vs_plus = self.states[next_state]['V']
+                value += pr * vs_plus
+            action_values.append(value)
 
-        return np.argmax(actionValues)
+        return np.argmax(action_values)
 
     # Сохранение стратегии игрока
     #

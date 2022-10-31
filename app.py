@@ -32,14 +32,14 @@ class Tile(pg.sprite.Sprite):
             )
 
 class App2048(pg.sprite.Sprite):
-    def __init__(self, tilesCount=4):
+    def __init__(self, tiles_count=4):
         pg.sprite.Sprite.__init__(self)
         self.start_x = 10
         self.start_y = 10
-        self.tilesCount = tilesCount
+        self.tiles_count = tiles_count
         self.width = config.HEIGHT-20
         self.height = config.HEIGHT-20
-        self.tileWidth = self.width/self.tilesCount
+        self.tileWidth = self.width/self.tiles_count
         self.tiles = []
         self.bg = pg.Rect(self.start_x, self.start_y, self.width, self.height)
 
@@ -48,9 +48,9 @@ class App2048(pg.sprite.Sprite):
 
     def init(self):
         self.tiles = []
-        for x in range(self.tilesCount):
+        for x in range(self.tiles_count):
             row = []
-            for y in range(self.tilesCount):
+            for y in range(self.tiles_count):
                 row.append(
                     Tile(
                         width=self.tileWidth,
@@ -71,8 +71,8 @@ class App2048(pg.sprite.Sprite):
                 tile.draw(screen)
 
     def update(self, game_state):
-        for row in range(self.tilesCount):
-            for col in range(self.tilesCount):
+        for row in range(self.tiles_count):
+            for col in range(self.tiles_count):
                 self.tiles[row][col].number = game_state[row][col]
 
 class App:

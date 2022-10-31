@@ -11,10 +11,10 @@ class Game2048:
     # cols = rows
     def __init__(self, rows, cols = None):
         self.rows = rows
-        self.maxTileValue = 2
+        self.max_tile_value = 2
         self.cols = rows if cols is None else cols
         self.game = []
-        self.startState = None
+        self.start_state = None
         self.game_over = False
 
     # Заполнение поля начальными данными
@@ -24,16 +24,16 @@ class Game2048:
     # данными из состояния S0
     #
     # Returns -> void
-    def __fillTiles(self, startState):
-        listState = None
-        if startState == True:
-            listState = [int(num) for num in str(self.startState)]    
+    def __fill_tiles(self, start_state):
+        list_state = None
+        if start_state:
+            list_state = [int(num) for num in str(self.start_state)]
         
         for i in range(self.rows):
             row = []
             for j in range(self.rows):
-                if startState:
-                    row.append(0 if listState[j+i*self.rows] == 9 else listState[j+i*self.rows])
+                if start_state:
+                    row.append(0 if list_state[j+i*self.rows] == 9 else list_state[j+i*self.rows])
                 else:
                     row.append(0)
             self.game.append(row)
@@ -165,7 +165,7 @@ class Game2048:
     #
     # Returns -> int:
     # Максимальное значение ячейки на игровом поле
-    def __getMaxTile(self):
+    def __get_max_tile(self):
       max = np.max([num for row in self.game for num in row])
       return max
 
@@ -189,32 +189,32 @@ class Game2048:
     # в состояние S0
     #
     # Returns -> void
-    def init(self, startState = False):
+    def init(self, start_state = False):
         self.game = []
 
-        self.__fillTiles(startState)
+        self.__fill_tiles(start_state)
 
-        if not startState:
+        if not start_state:
             row = np.random.randint(0, self.rows)
             col = np.random.randint(0, self.cols)
             self.game[row][col] = 2
-            self.startState = self.getState()
+            self.start_state = self.get_state()
         
-        self.maxTileValue = self.__getMaxTile()
+        self.max_tile_value = self.__get_max_tile()
         self.game_over = self.__is_game_over()
 
     # Получение состояния игры
     #
     # Returns -> int
     # Состояние игры, то есть её хеша
-    def getState(self):
+    def get_state(self):
         return hash(self)
 
     # Вычисление и возврат числового значения игры
     #
     # Returns -> int:
     # Числовое значение игры, равное сумме всех чисел в ячейках
-    def getValue(self):
+    def get_value(self):
       val = np.sum([num for row in self.game for num in row])
       return val
 
@@ -222,7 +222,7 @@ class Game2048:
     #
     # Returns -> int:
     # Количество свободных ячеек на игровом поле
-    def getFreeTiles(self):
+    def get_free_tiles(self):
         return [x for row in self.game for x in row].count(0)
 
     # Совершение игрового действия
@@ -245,7 +245,7 @@ class Game2048:
       else:
           self.__switch_down()
 
-      self.maxTileValue = self.__getMaxTile()
+      self.max_tile_value = self.__get_max_tile()
 
       if self.__is_game_over():
           self.game_over = True

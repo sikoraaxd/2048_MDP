@@ -13,11 +13,11 @@ if __name__ == '__main__':
     player = Player()
 
     player.train(environment=environment,
-                 boundOfStates=400,
+                 bound_of_states=400,
                  needed=config.NEEDED)
     player.createPolicy(environment)
 
-    environment.init(startState=True)
+    environment.init(start_state=True)
     app = App(environment)
 
     while app.run:
