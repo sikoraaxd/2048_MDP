@@ -1,4 +1,5 @@
 import numpy as np
+from exception import AttributeError
 
 
 class Game2048:
@@ -26,6 +27,9 @@ class Game2048:
     #
     # Returns -> void
     def __fill_tiles(self, start_state):
+        if start_state and self.start_state is None:
+            raise AttributeError('Атрибут self_state не определён')
+
         list_state = None
         if start_state:
             list_state = [int(num) for num in str(self.start_state)]

@@ -3,6 +3,7 @@ from time import sleep
 import numpy as np
 import sys
 import config
+from exception import AttributeError
 
 
 class Agent:
@@ -208,6 +209,8 @@ class Agent:
     #
     # Returns -> void
     def create_policy(self, environment):
+        if len(self.states.keys()) == 0:
+            raise AttributeError('Агент не обучен')
         self.__find_state_value(environment.start_state)
 
     # Получение ценности состояния
